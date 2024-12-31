@@ -1,9 +1,9 @@
 'use client'
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import Image from 'next/image';
-import Link from 'next/link';
+import Image from 'next/image'
+import Link from 'next/link'
 import type { RotationData } from './types'
 import axios from "axios"
 import RotationCard from './RotationCard'
@@ -18,7 +18,6 @@ export default function MapRotation() {
     const [error, setError] = useState<string | null>(null)
     const [leftBgImage, setLeftBgImage] = useState('')
     const [rightBgImage, setRightBgImage] = useState('')
-    const [reloadTrigger, setReloadTrigger] = useState(0)
     const [imagesLoaded, setImagesLoaded] = useState(false)
 
     const fetchData = async () => {
@@ -53,27 +52,41 @@ export default function MapRotation() {
         )
     }
 
+    const handleTimerEnd = useCallback(() => {
+        fetchData()
+    }, [])
+
     useEffect(() => {
         fetchData()
-    }, [reloadTrigger])
+    }, [])
 
+    // Add a timer check for each visible rotation
     useEffect(() => {
-        if (data) {
-            const timers = [
-                data.battle_royale.current.remainingSecs,
-                data.ranked.current.remainingSecs,
-                data.ltm?.current.remainingSecs
-            ].filter(Boolean) as number[]
+        if (!data) return
 
-            const minTimer = Math.min(...timers)
+        const checkTimers = () => {
+            const timersToCheck = [
+                { type: 'battle_royale', remaining: data.battle_royale.current.remainingSecs },
+                { type: 'ranked', remaining: data.ranked.current.remainingSecs },
+            ]
 
-            const timer = setTimeout(() => {
-                setReloadTrigger(prev => prev + 1)
-            }, minTimer * 1000)
+            if (showLTM && data.ltm?.current) {
+                timersToCheck.push({ type: 'ltm', remaining: data.ltm.current.remainingSecs })
+            }
 
-            return () => clearTimeout(timer)
+            for (const timer of timersToCheck) {
+                if (timer.remaining !== undefined && timer.remaining <= 0) {
+                    handleTimerEnd()
+                    return
+                }
+            }
         }
-    }, [data])
+
+        // Check timers every second
+        const interval = setInterval(checkTimers, 1000)
+
+        return () => clearInterval(interval)
+    }, [data, showLTM, handleTimerEnd])
 
     const titleVariants = {
         hidden: { opacity: 0, y: -10 },
@@ -162,11 +175,13 @@ export default function MapRotation() {
                             current={data.battle_royale.current}
                             next={data.battle_royale.next}
                             type="Normal Battle Royale"
+                            mode="normal"
                         />
                         <RotationCard
                             current={data.ranked.current}
                             next={data.ranked.next}
                             type="Ranked Battle Royale"
+                            mode="ranked"
                         />
                     </div>
 
@@ -200,6 +215,7 @@ export default function MapRotation() {
                                     current={data.ltm.current}
                                     next={data.ltm.next}
                                     type="Limited Time Mode"
+                                    mode="ltm"
                                     showEventName
                                 />
                             </motion.div>
@@ -220,7 +236,7 @@ export default function MapRotation() {
                         className="text-sm hover:underline"
                         style={{ color: '#8fbc8f' }}
                     >
-                    Made with ❤️
+                        Made with ❤️
                     </Link>
                 </motion.div>
             </div>

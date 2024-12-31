@@ -2,11 +2,17 @@ import { useEffect, useState } from "react"
 import type { MapRotation } from './types'
 import AnimatedDigit from './AnimatedDigit'
 
+interface MapTimerProps {
+  rotation: MapRotation;
+  colorClass?: string;
+}
 
-const MapTimer = ({ rotation }: { rotation: MapRotation }) => {
+const MapTimer = ({ rotation, colorClass = 'text-emerald-400/90' }: MapTimerProps) => {
   const [timeRemaining, setTimeRemaining] = useState(rotation.remainingSecs || 0)
 
   useEffect(() => {
+    setTimeRemaining(rotation.remainingSecs || 0)
+    
     const timer = setInterval(() => {
       setTimeRemaining((prev) => {
         if (prev <= 0) return 0
@@ -15,7 +21,7 @@ const MapTimer = ({ rotation }: { rotation: MapRotation }) => {
     }, 1000)
 
     return () => clearInterval(timer)
-  }, [])
+  }, [rotation.remainingSecs])
 
   const formatTime = (seconds: number) => {
     const hours = Math.floor(seconds / 3600)
@@ -39,7 +45,7 @@ const MapTimer = ({ rotation }: { rotation: MapRotation }) => {
   const time = formatTime(timeRemaining)
 
   return (
-    <div className="font-mono text-3xl font-bold tracking-wider text-[#8fbc8f]/90">
+    <div className={`font-mono text-3xl font-bold tracking-wider ${colorClass}`}>
       {time.hours && (
         <>
           <AnimatedDigit digit={time.hours[0]} />
