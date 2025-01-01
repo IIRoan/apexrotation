@@ -8,8 +8,19 @@ type RotationMode = 'ranked' | 'normal' | 'ltm';
 
 interface ExtendedRotationCardProps extends RotationCardProps {
   mode: RotationMode;
+  onHoverStart?: () => void;
+  onHoverEnd?: () => void;
 }
-const RotationCard: React.FC<ExtendedRotationCardProps> = ({ current, next, type, mode, showEventName = false }) => {
+
+const RotationCard: React.FC<ExtendedRotationCardProps> = ({
+  current,
+  next,
+  type,
+  mode,
+  showEventName = false,
+  onHoverStart,
+  onHoverEnd
+}) => {
   const getModeColors = (mode: RotationMode) => {
     switch (mode) {
       case 'ranked':
@@ -49,17 +60,24 @@ const RotationCard: React.FC<ExtendedRotationCardProps> = ({ current, next, type
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
+      initial={{ opacity: 0, flex: 1 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
+      whileHover={{
+        flex: 1.5,
+        transition: {
+          duration: 0.4,
+          ease: [0.4, 0, 0.2, 1]
+        }
+      }}
+      onHoverStart={onHoverStart}
+      onHoverEnd={onHoverEnd}
+      transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
       className="min-h-[600px] flex flex-col relative"
+      style={{ minWidth: 0 }}
     >
-      {/* Left Border Accent */}
       <div className={`absolute left-0 top-1/2 -translate-y-1/2 w-1 h-4/5 bg-gradient-to-b ${colors.accent}`} />
 
-      {/* Main Content */}
       <div className="flex-1 flex flex-col pl-8 pt-12 space-y-20">
-        {/* Header Section */}
         <div className="space-y-6">
           <motion.div
             initial={{ opacity: 0, x: -10 }}
@@ -93,7 +111,6 @@ const RotationCard: React.FC<ExtendedRotationCardProps> = ({ current, next, type
           )}
         </div>
 
-        {/* Timer Section */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -109,7 +126,6 @@ const RotationCard: React.FC<ExtendedRotationCardProps> = ({ current, next, type
           </span>
         </motion.div>
 
-        {/* Next Map Section */}
         <div className="mt-auto space-y-6">
           <div className="flex items-center gap-6">
             <div className="space-y-2">
@@ -123,7 +139,6 @@ const RotationCard: React.FC<ExtendedRotationCardProps> = ({ current, next, type
             <ArrowRight className={`h-5 w-5 ${colors.textMuted}`} />
           </div>
 
-          {/* Progress Bar */}
           <div className={`relative h-1 ${colors.progressBg} rounded-full overflow-hidden`}>
             <motion.div
               className={`absolute top-0 left-0 h-full ${colors.progressFill}`}

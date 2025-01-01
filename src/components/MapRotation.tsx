@@ -19,6 +19,7 @@ export default function MapRotation() {
     const [leftBgImage, setLeftBgImage] = useState('')
     const [rightBgImage, setRightBgImage] = useState('')
     const [imagesLoaded, setImagesLoaded] = useState(false)
+    const [hoveredSide, setHoveredSide] = useState<'left' | 'right' | null>(null);
 
     const fetchData = async () => {
         setIsLoading(true)
@@ -131,17 +132,48 @@ export default function MapRotation() {
     return (
         <div className="relative min-h-screen w-full bg-black">
             {/* Split Backgrounds */}
-            <div className="fixed inset-0 flex">
-                <AnimatePresence>
-                    <BackgroundImage imageUrl={leftBgImage} side="left" />
-                </AnimatePresence>
-                <div className="absolute inset-0 right-1/2 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
+            <div className="fixed inset-0">
+                <div className="relative h-full w-full overflow-hidden">
+                    <AnimatePresence>
+                        <BackgroundImage
+                            imageUrl={leftBgImage}
+                            side="left"
+                            isHovered={hoveredSide === 'left'}
+                            otherSideHovered={hoveredSide === 'right'}
+                        />
+                    </AnimatePresence>
+                    <motion.div
+                        className="absolute inset-0 right-1/2 bg-gradient-to-r from-black/80 via-black/40 to-transparent"
+                        animate={{
+                            right: hoveredSide === 'left' ? '40%' : hoveredSide === 'right' ? '60%' : '50%'
+                        }}
+                        transition={{
+                            duration: 0.4,
+                            ease: [0.4, 0, 0.2, 1]
+                        }}
+                    />
 
-                <AnimatePresence>
-                    <BackgroundImage imageUrl={rightBgImage} side="right" />
-                </AnimatePresence>
-                <div className="absolute inset-0 left-1/2 bg-gradient-to-l from-black/80 via-black/40 to-transparent" />
+                    <AnimatePresence>
+                        <BackgroundImage
+                            imageUrl={rightBgImage}
+                            side="right"
+                            isHovered={hoveredSide === 'right'}
+                            otherSideHovered={hoveredSide === 'left'}
+                        />
+                    </AnimatePresence>
+                    <motion.div
+                        className="absolute inset-0 left-1/2 bg-gradient-to-l from-black/80 via-black/40 to-transparent"
+                        animate={{
+                            left: hoveredSide === 'right' ? '40%' : hoveredSide === 'left' ? '60%' : '50%'
+                        }}
+                        transition={{
+                            duration: 0.4,
+                            ease: [0.4, 0, 0.2, 1]
+                        }}
+                    />
+                </div>
             </div>
+
 
             {/* Content */}
             <div className="relative min-h-screen w-full p-4">
@@ -170,18 +202,22 @@ export default function MapRotation() {
                     </motion.div>
 
                     {/* Map Rotations */}
-                    <div className="grid gap-6 md:grid-cols-2">
+                    <div className="flex gap-6">
                         <RotationCard
                             current={data.battle_royale.current}
                             next={data.battle_royale.next}
                             type="Normal Battle Royale"
                             mode="normal"
+                            onHoverStart={() => setHoveredSide('left')}
+                            onHoverEnd={() => setHoveredSide(null)}
                         />
                         <RotationCard
                             current={data.ranked.current}
                             next={data.ranked.next}
                             type="Ranked Battle Royale"
                             mode="ranked"
+                            onHoverStart={() => setHoveredSide('right')}
+                            onHoverEnd={() => setHoveredSide(null)}
                         />
                     </div>
 
