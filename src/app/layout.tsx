@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     description: "Apex Legends Map Rotation Timer",
     images: [
       {
-        url: "/screenshot.png", 
+        url: "https://apex.roan.dev/screenshot.png",
         width: 1200,
         height: 630,
         alt: "Apex Rotation Preview",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Apex Rotation",
     description: "Apex Legends Map Rotation Timer",
-    images: ["/screenshot.png"], 
+    images: ["https://apex.roan.dev/screenshot.png"],
   },
 };
 
