@@ -10,6 +10,7 @@ import RotationCard from './RotationCard'
 import BackgroundImage from './BackgroundImage'
 import LTMButton from './LTMButton'
 import LoadingSpinner from './LoadingSpinner'
+import MobileDisclaimer from './MobileDisclaimer';
 
 export default function MapRotation() {
     const [showLTM, setShowLTM] = useState(false)
@@ -20,6 +21,8 @@ export default function MapRotation() {
     const [rightBgImage, setRightBgImage] = useState('')
     const [imagesLoaded, setImagesLoaded] = useState(false)
     const [hoveredSide, setHoveredSide] = useState<'left' | 'right' | null>(null);
+    const [showMobileDisclaimer, setShowMobileDisclaimer] = useState(false);
+    const [isMobileConfirmed, setIsMobileConfirmed] = useState(false);
 
     const fetchData = async () => {
         setIsLoading(true)
@@ -82,8 +85,17 @@ export default function MapRotation() {
         },
     };
 
+    useEffect(() => {
+        const checkMobile = () => window.innerWidth <= 768;
+        setShowMobileDisclaimer(checkMobile());
+    }, []);
+
     if (isLoading || !imagesLoaded) {
         return <LoadingSpinner />
+    }
+
+    if (showMobileDisclaimer && !isMobileConfirmed) {
+        return <MobileDisclaimer onProceed={() => setIsMobileConfirmed(true)} />;
     }
 
     if (error) {
