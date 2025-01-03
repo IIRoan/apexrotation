@@ -6,7 +6,6 @@ import { Timer, ArrowRight } from 'lucide-react'
 import type { RotationCardProps } from './types'
 import MapTimer from './MapTimer'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
-import { useModeColors } from '@/hooks/useModeColors'
 
 type RotationMode = 'ranked' | 'normal' | 'ltm'
 
@@ -26,8 +25,47 @@ const RotationCard: React.FC<ExtendedRotationCardProps> = ({
   onHoverEnd
 }) => {
   const isMobile = useMediaQuery('(max-width: 640px)')
-  const colors = useModeColors(mode)
-  
+
+  const getModeColors = (mode: RotationMode) => {
+    switch (mode) {
+      case 'ranked':
+        return {
+          text: 'text-purple-400',
+          textMuted: 'text-purple-400/70',
+          border: 'border-purple-400/20',
+          badge: 'bg-purple-400/10',
+          progressBg: 'bg-purple-400/10',
+          progressFill: 'bg-purple-400',
+          accent: 'bg-purple-400',
+          position: 'right-0 rounded-l-full'
+        }
+      case 'normal':
+        return {
+          text: 'text-emerald-400',
+          textMuted: 'text-emerald-400/70',
+          border: 'border-emerald-400/20',
+          badge: 'bg-emerald-400/10',
+          progressBg: 'bg-emerald-400/10',
+          progressFill: 'bg-emerald-400',
+          accent: 'bg-emerald-400',
+          position: 'left-0 rounded-r-full'
+        }
+      case 'ltm':
+        return {
+          text: 'text-yellow-400',
+          textMuted: 'text-yellow-400/70',
+          border: 'border-yellow-400/20',
+          badge: 'bg-yellow-400/10',
+          progressBg: 'bg-yellow-400/10',
+          progressFill: 'bg-yellow-400',
+          accent: 'bg-yellow-400',
+          position: 'left-0 rounded-r-full'
+        }
+    }
+  }
+
+  const colors = getModeColors(mode)
+
   return (
     <motion.div
       initial={{ opacity: 0, flex: 1 }}
