@@ -53,41 +53,10 @@ export default function MapRotation() {
         )
     }
 
-    const handleTimerEnd = useCallback(() => {
-        fetchData()
-    }, [])
 
     useEffect(() => {
         fetchData()
     }, [])
-
-    // Add a timer check for each visible rotation
-    useEffect(() => {
-        if (!data) return
-
-        const checkTimers = () => {
-            const timersToCheck = [
-                { type: 'battle_royale', remaining: data.battle_royale.current.remainingSecs },
-                { type: 'ranked', remaining: data.ranked.current.remainingSecs },
-            ]
-
-            if (showLTM && data.ltm?.current) {
-                timersToCheck.push({ type: 'ltm', remaining: data.ltm.current.remainingSecs })
-            }
-
-            for (const timer of timersToCheck) {
-                if (timer.remaining !== undefined && timer.remaining <= 0) {
-                    handleTimerEnd()
-                    return
-                }
-            }
-        }
-
-        // Check timers every second
-        const interval = setInterval(checkTimers, 1000)
-
-        return () => clearInterval(interval)
-    }, [data, showLTM, handleTimerEnd])
 
     const titleVariants = {
         hidden: { opacity: 0, y: -10 },
