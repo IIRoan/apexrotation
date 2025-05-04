@@ -90,6 +90,12 @@ export default function MapRotation() {
         setShowMobileDisclaimer(checkMobile());
     }, []);
 
+    useEffect(() => {
+        const checkMobile = () => window.innerWidth <= 768;
+        const isMobile = checkMobile();
+        setShowMobileDisclaimer(false);
+      }, []);
+
     if (isLoading || !imagesLoaded) {
         return <LoadingSpinner />
     }
