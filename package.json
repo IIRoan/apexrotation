@@ -19,6 +19,8 @@
     "framer-motion": "^11.15.0",
     "lucide-react": "^0.469.0",
     "next": "15.1.3",
+    "posthog-js": "^1.239.1",
+    "posthog-node": "^4.17.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwind-merge": "^2.6.0",

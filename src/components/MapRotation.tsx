@@ -29,7 +29,7 @@ export default function MapRotation() {
         setError(null)
         setImagesLoaded(false)
         try {
-            const response = await axios.get(`https://api.mozambiquehe.re/maprotation?version=2&auth=${process.env.NEXT_PUBLIC_AL_API_KEY}`)
+            const response = await axios.get('/api/map-rotation')
             setData(response.data)
             setLeftBgImage(response.data.battle_royale.current.asset)
             setRightBgImage(response.data.ranked.current.asset)

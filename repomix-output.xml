@@ -1,0 +1,1179 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+4. Repository files, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+<additional_info>
+
+</additional_info>
+
+</file_summary>
+
+<directory_structure>
+app/globals.css
+app/layout.tsx
+app/page.tsx
+components/AnimatedDigit.tsx
+components/BackgroundImage.tsx
+components/LoadingSpinner.tsx
+components/LTMButton.tsx
+components/MapRotation.tsx
+components/MapTimer.tsx
+components/MobileDisclaimer.tsx
+components/RotationCard.tsx
+components/types.ts
+components/ui/button.tsx
+hooks/useMediaQuery.ts
+lib/utils.ts
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="app/globals.css">
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+</file>
+
+<file path="app/layout.tsx">
+import type { Metadata, Viewport } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+/**
+ * Default metadata configuration for the application
+ * Following Next.js 14 metadata API best practices
+ */
+
+export const metadata: Metadata = {
+  metadataBase: new URL('https://apex.roan.dev'),
+  title: {
+    default: "Apex Rotation",
+    template: "%s | Apex Rotation"
+  },
+  description: "Real-time Apex Legends Map Rotation Timer. Track current and upcoming maps for Battle Royale, Ranked, and LTM modes.",
+  keywords: ["Apex Legends", "map rotation", "timer", "battle royale", "ranked", "gaming"],
+  authors: [{ name: "IIRoan" }],
+  creator: "IIRoan",
+  publisher: "IIRoan",
+  formatDetection: {
+    telephone: false,
+    email: false,
+    address: false,
+  },
+  manifest: "/site.webmanifest",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  icons: {
+    icon: [
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon.ico" }
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png" }
+    ],
+    other: [
+      {
+        rel: "mask-icon",
+        url: "/apex.svg",
+        color: "#ffffff"
+      }
+    ]
+  },
+  openGraph: {
+    type: "website",
+    siteName: "Apex Rotation",
+    title: "Apex Rotation",
+    description: "Real-time Apex Legends Map Rotation Timer. Track current and upcoming maps for Battle Royale, Ranked, and LTM modes.",
+    images: [
+      {
+        url: "https://apex.roan.dev/screenshot.png",
+        width: 1200,
+        height: 630,
+        alt: "Apex Rotation Preview",
+        type: "image/png",
+      },
+    ],
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Apex Rotation",
+    description: "Real-time Apex Legends Map Rotation Timer. Track current and upcoming maps for Battle Royale, Ranked, and LTM modes.",
+    images: ["https://apex.roan.dev/screenshot.png"],
+  },
+  alternates: {
+    canonical: "https://apex.roan.dev",
+  },
+  verification: {
+    google: "your-google-site-verification",
+    yandex: "your-yandex-verification",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: '#000000',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  viewportFit: 'cover',
+};
+
+interface RootLayoutProps {
+  children: React.ReactNode;
+}
+
+
+export default function RootLayout({
+  children,
+}: Readonly<RootLayoutProps>) {
+  return (
+    <html lang="en" dir="ltr">
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        {children}
+      </body>
+    </html>
+  );
+}
+</file>
+
+<file path="app/page.tsx">
+import MapRotation from '../components/MapRotation'
+
+export default function Home() {
+  return <MapRotation />
+}
+</file>
+
+<file path="components/AnimatedDigit.tsx">
+import { motion } from "framer-motion"
+
+const AnimatedDigit = ({ digit }: { digit: string }) => (
+  <motion.span
+    key={digit}
+    initial={{ opacity: 0.8 }}
+    animate={{ opacity: 1 }}
+    transition={{ duration: 0.15 }}
+  >
+    {digit}
+  </motion.span>
+)
+
+export default AnimatedDigit
+</file>
+
+<file path="components/BackgroundImage.tsx">
+import { motion } from "framer-motion";
+import type { FC, ReactNode } from 'react';
+
+interface BackgroundImageProps {
+ imageUrl: string;
+ side: 'left' | 'right';
+ isHovered: boolean;
+ otherSideHovered: boolean;
+ children?: ReactNode;
+}
+
+const Separator: FC<{hoveredSide: 'left' | 'right' | null}> = ({ hoveredSide }) => (
+  <motion.div 
+    className="absolute top-0 -translate-x-1/2 w-px h-full bg-white/10 z-20" 
+    animate={{
+      left: hoveredSide === 'right' ? '40%' : 
+            hoveredSide === 'left' ? '60%' : '50%'
+    }}
+    transition={{
+      duration: 0.4,
+      ease: [0.4, 0, 0.2, 1]
+    }}
+  />
+ );
+
+const BackgroundImage: FC<BackgroundImageProps> = ({
+ imageUrl,
+ side,
+ isHovered,
+ otherSideHovered,
+ children
+}) => {
+ const width = isHovered ? '60%' : otherSideHovered ? '40%' : '50%';
+ const gradientPosition = side === 'left' ? 'right' : 'left';
+ 
+ return (
+   <>
+     <motion.div
+       key={imageUrl}
+       initial={{ opacity: 0 }}
+       animate={{ opacity: 1, width }}
+       exit={{ opacity: 0 }}
+       transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+       className="absolute inset-0 flex items-center justify-center"
+       style={{
+         right: side === 'left' ? 'auto' : 0,
+         left: side === 'left' ? 0 : 'auto',
+       }}
+     >
+       <div
+         className="absolute inset-0 mix-blend-multiply"
+         style={{
+           backgroundImage: `
+             linear-gradient(to ${gradientPosition},
+               rgba(15, 23, 42, 0.18),
+               rgba(15, 23, 42, 0.18)
+             ),
+             linear-gradient(to bottom,
+               rgba(0, 0, 0, 0.15),
+               rgba(0, 0, 0, 0.15)
+             ),
+             url(${imageUrl})
+           `,
+           backgroundPosition: '50% 50%',
+           backgroundSize: 'cover',
+           transform: side === 'right' ? 'scaleX(-1)' : 'none',
+         }}
+       />
+       {children && (
+         <div className="relative z-10 p-4">
+           <div className="text-shadow backdrop-blur-sm bg-black/20 p-2 rounded">
+             {children}
+           </div>
+         </div>
+       )}
+     </motion.div>
+     {side === 'left' && <Separator hoveredSide={isHovered ? 'left' : otherSideHovered ? 'right' : null} />}
+   </>
+ );
+};
+
+export default BackgroundImage;
+</file>
+
+<file path="components/LoadingSpinner.tsx">
+import React from 'react';
+import { motion } from 'framer-motion';
+
+interface LoadingSpinnerProps {
+  loadingText?: string;
+  size?: number;
+}
+
+const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
+  loadingText = 'Loading...',
+  size = 96
+}) => {
+  return (
+    <div className="flex flex-col items-center justify-center h-screen bg-black">
+      <motion.div 
+        className="relative"
+        style={{ width: size, height: size }}
+        animate={{ rotate: [0, 360] }}
+        transition={{
+          duration: 1.5,
+          repeat: Infinity,
+          ease: "linear"
+        }}
+      >
+        <motion.div
+          className="absolute inset-0 rounded-full border-4 border-emerald-400/10"
+          style={{
+            borderTopColor: 'rgba(52, 211, 153, 0.8)',
+            borderRightColor: 'rgba(52, 211, 153, 0.4)',
+          }}
+          animate={{
+            scale: [1, 1.05, 1],
+          }}
+          transition={{
+            duration: 0.8,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        
+        <motion.div
+          className="absolute inset-4 rounded-full border-2 border-emerald-400/20"
+          style={{
+            borderTopColor: 'rgba(52, 211, 153, 0.6)',
+            borderLeftColor: 'rgba(52, 211, 153, 0.3)',
+          }}
+          animate={{ rotate: [360, 0] }}
+          transition={{
+            duration: 0.8,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+        />
+      </motion.div>
+      
+      <motion.p
+        className="mt-6 text-xl font-bold text-emerald-400/70"
+        animate={{
+          opacity: [0.5, 1, 0.5],
+        }}
+        transition={{
+          duration: 0.8,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+      >
+        {loadingText}
+      </motion.p>
+    </div>
+  );
+};
+
+export default LoadingSpinner;
+</file>
+
+<file path="components/LTMButton.tsx">
+import React from 'react';
+import { motion } from "framer-motion";
+import { GaugeCircle } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+
+interface LTMButtonProps {
+  showLTM: boolean;
+  onClick: () => void;
+  className?: string;
+}
+
+const LTMButton: React.FC<LTMButtonProps> = ({ 
+  showLTM, 
+  onClick,
+  className 
+}) => {
+  return (
+    <motion.div
+      animate={{ scale: 1 }}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+    >
+      <Button
+        variant="outline"
+        onClick={onClick}
+        className={cn(
+          "relative overflow-hidden",
+          "px-6 py-2.5 h-auto rounded-lg",
+          "border border-[#8fbc8f]/20",
+          "bg-gradient-to-r from-black/40 to-black/20",
+          "hover:border-[#8fbc8f]/40 hover:from-black/50 hover:to-black/30",
+          "transition-all duration-300",
+          "flex items-center gap-2.5",
+          className
+        )}
+      >
+        <motion.div
+          animate={{
+            rotate: showLTM ? 180 : 0,
+          }}
+          transition={{
+            type: "spring",
+            stiffness: 200,
+            damping: 10
+          }}
+        >
+          <GaugeCircle className="w-4 h-4 text-[#8fbc8f]" />
+        </motion.div>
+
+        <span className="text-[#8fbc8f] font-medium">
+          {showLTM ? 'Hide LTM' : 'Show LTM'}
+        </span>
+
+        {/* Animated border highlight */}
+        <motion.div
+          className="absolute inset-0 pointer-events-none"
+          animate={{
+            opacity: showLTM ? 1 : 0
+          }}
+          transition={{ duration: 0.3 }}
+        >
+          <div className="absolute inset-0 rounded-lg border-2 border-[#8fbc8f]/20" />
+        </motion.div>
+
+        {/* Background pulse effect on state change */}
+        <motion.div
+          className="absolute inset-0 bg-[#8fbc8f]/5 pointer-events-none"
+          initial={false}
+          animate={{
+            scale: showLTM ? [1, 1.5, 1] : [1, 1.5, 1],
+            opacity: [0.3, 0, 0]
+          }}
+          transition={{
+            duration: 0.5,
+            times: [0, 0.5, 1]
+          }}
+          key={showLTM ? 'show' : 'hide'}
+        />
+      </Button>
+    </motion.div>
+  );
+};
+
+export default LTMButton;
+</file>
+
+<file path="components/MapRotation.tsx">
+'use client'
+
+import { useEffect, useState, useCallback } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import Image from 'next/image'
+import Link from 'next/link'
+import type { RotationData } from './types'
+import axios from "axios"
+import RotationCard from './RotationCard'
+import BackgroundImage from './BackgroundImage'
+import LTMButton from './LTMButton'
+import LoadingSpinner from './LoadingSpinner'
+import MobileDisclaimer from './MobileDisclaimer';
+
+export default function MapRotation() {
+    const [showLTM, setShowLTM] = useState(false)
+    const [data, setData] = useState<RotationData | null>(null)
+    const [isLoading, setIsLoading] = useState(true)
+    const [error, setError] = useState<string | null>(null)
+    const [leftBgImage, setLeftBgImage] = useState('')
+    const [rightBgImage, setRightBgImage] = useState('')
+    const [imagesLoaded, setImagesLoaded] = useState(false)
+    const [hoveredSide, setHoveredSide] = useState<'left' | 'right' | null>(null);
+    const [showMobileDisclaimer, setShowMobileDisclaimer] = useState(false);
+    const [isMobileConfirmed, setIsMobileConfirmed] = useState(false);
+
+    const fetchData = async () => {
+        setIsLoading(true)
+        setError(null)
+        setImagesLoaded(false)
+        try {
+            const response = await axios.get(`https://api.mozambiquehe.re/maprotation?version=2&auth=${process.env.NEXT_PUBLIC_AL_API_KEY}`)
+            setData(response.data)
+            setLeftBgImage(response.data.battle_royale.current.asset)
+            setRightBgImage(response.data.ranked.current.asset)
+            await preloadImages([response.data.battle_royale.current.asset, response.data.ranked.current.asset])
+            setImagesLoaded(true)
+            setIsLoading(false)
+        } catch (error) {
+            console.error("API error:", error)
+            setError("API error: too many requests")
+            setIsLoading(false)
+        }
+    }
+
+    const preloadImages = (urls: string[]) => {
+        return Promise.all(
+            urls.map((url) => {
+                return new Promise((resolve, reject) => {
+                    const img = document.createElement('img')
+                    img.onload = resolve
+                    img.onerror = reject
+                    img.src = url
+                })
+            })
+        )
+    }
+
+
+    useEffect(() => {
+        fetchData()
+    }, [])
+
+    const titleVariants = {
+        hidden: { opacity: 0, y: -10 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+                duration: 0.3,
+                ease: "easeOut",
+            },
+        },
+    };
+
+    const iconVariants = {
+        hidden: { scale: 0.8, opacity: 0 },
+        visible: {
+            scale: 1,
+            opacity: 1,
+            transition: {
+                duration: 0.3,
+                ease: "easeOut",
+            },
+        },
+    };
+
+    useEffect(() => {
+        const checkMobile = () => window.innerWidth <= 768;
+        setShowMobileDisclaimer(checkMobile());
+    }, []);
+
+    if (isLoading || !imagesLoaded) {
+        return <LoadingSpinner />
+    }
+
+    if (showMobileDisclaimer && !isMobileConfirmed) {
+        return <MobileDisclaimer onProceed={() => setIsMobileConfirmed(true)} />;
+    }
+
+    if (error) {
+        return (
+            <div className="flex items-center justify-center h-screen bg-gray-900">
+                <p className="text-red-500 text-xl">{error}</p>
+            </div>
+        )
+    }
+
+    if (!data) {
+        return null
+    }
+
+    return (
+        <div className="relative min-h-screen w-full bg-black">
+            {/* Split Backgrounds */}
+            <div className="fixed inset-0">
+                <div className="relative h-full w-full overflow-hidden">
+                    <AnimatePresence>
+                        <BackgroundImage
+                            imageUrl={leftBgImage}
+                            side="left"
+                            isHovered={hoveredSide === 'left'}
+                            otherSideHovered={hoveredSide === 'right'}
+                        />
+                    </AnimatePresence>
+                    <motion.div
+                        className="absolute inset-0 right-1/2 bg-gradient-to-r from-black/80 via-black/40 to-transparent"
+                        animate={{
+                            right: hoveredSide === 'left' ? '40%' : hoveredSide === 'right' ? '60%' : '50%'
+                        }}
+                        transition={{
+                            duration: 0.4,
+                            ease: [0.4, 0, 0.2, 1]
+                        }}
+                    />
+
+                    <AnimatePresence>
+                        <BackgroundImage
+                            imageUrl={rightBgImage}
+                            side="right"
+                            isHovered={hoveredSide === 'right'}
+                            otherSideHovered={hoveredSide === 'left'}
+                        />
+                    </AnimatePresence>
+                    <motion.div
+                        className="absolute inset-0 left-1/2 bg-gradient-to-l from-black/80 via-black/40 to-transparent"
+                        animate={{
+                            left: hoveredSide === 'right' ? '40%' : hoveredSide === 'left' ? '60%' : '50%'
+                        }}
+                        transition={{
+                            duration: 0.4,
+                            ease: [0.4, 0, 0.2, 1]
+                        }}
+                    />
+                </div>
+            </div>
+
+
+            {/* Content */}
+            <div className="relative min-h-screen w-full p-4">
+                <div className="mx-auto max-w-full space-y-6 px-4 lg:px-8">
+                    {/* Header */}
+                    <motion.div
+                        className="mb-8 flex items-center justify-between"
+                        initial="hidden"
+                        animate="visible"
+                        variants={titleVariants}
+                    >
+                        <div className="flex items-center gap-3">
+                            <motion.div variants={iconVariants}>
+                                <Image
+                                    src="/apex.svg"
+                                    alt="Apex Legends Logo"
+                                    width={28}
+                                    height={28}
+                                />
+                            </motion.div>
+                        </div>
+                        <LTMButton
+                            showLTM={showLTM}
+                            onClick={() => setShowLTM(!showLTM)}
+                        />
+                    </motion.div>
+
+                    {/* Map Rotations */}
+                    <div className="flex gap-6">
+                        <RotationCard
+                            current={data.battle_royale.current}
+                            next={data.battle_royale.next}
+                            type="Normal Battle Royale"
+                            mode="normal"
+                            onHoverStart={() => setHoveredSide('left')}
+                            onHoverEnd={() => setHoveredSide(null)}
+                        />
+                        <RotationCard
+                            current={data.ranked.current}
+                            next={data.ranked.next}
+                            type="Ranked Battle Royale"
+                            mode="ranked"
+                            onHoverStart={() => setHoveredSide('right')}
+                            onHoverEnd={() => setHoveredSide(null)}
+                        />
+                    </div>
+
+                    {/* LTM Section */}
+                    <AnimatePresence>
+                        {showLTM && data.ltm && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: 20 }}
+                                transition={{
+                                    duration: 0.5,
+                                    ease: [0.4, 0, 0.2, 1]
+                                }}
+                                className="relative z-10"
+                            >
+                                <div className="absolute inset-0 -z-10">
+                                    <motion.div
+                                        initial={{ scale: 1.1 }}
+                                        animate={{ scale: 1 }}
+                                        transition={{ duration: 0.7 }}
+                                        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-80"
+                                        style={{
+                                            backgroundImage: `url(${data.ltm.current.asset})`,
+                                            backgroundPosition: '50% 50%'
+                                        }}
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
+                                </div>
+                                <RotationCard
+                                    current={data.ltm.current}
+                                    next={data.ltm.next}
+                                    type="Limited Time Mode"
+                                    mode="ltm"
+                                    showEventName
+                                />
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
+                {/* GitHub Link */}
+                <motion.div
+                    className="absolute bottom-4 left-1/2 transform -translate-x-1/2"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 }}
+                >
+                    <Link
+                        href="https://github.com/iiroan/apexrotation"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm hover:underline"
+                        style={{ color: '#8fbc8f' }}
+                    >
+                        Made with ❤️
+                    </Link>
+                </motion.div>
+            </div>
+        </div>
+    )
+}
+</file>
+
+<file path="components/MapTimer.tsx">
+import { useEffect, useState, useCallback } from "react"
+import type { MapRotation } from './types'
+import AnimatedDigit from './AnimatedDigit'
+
+interface MapTimerProps {
+  rotation: MapRotation;
+  colorClass?: string;
+}
+
+interface FormattedTime {
+  hours?: string;
+  minutes: string;
+  seconds: string;
+}
+
+const MapTimer = ({ rotation, colorClass = 'text-emerald-400/90' }: MapTimerProps) => {
+  const [timeRemaining, setTimeRemaining] = useState(rotation.remainingSecs || 0)
+
+  const handleTimerEnd = useCallback(() => {
+    // Reload the entire page
+    window.location.reload()
+  }, [])
+
+  useEffect(() => {
+    // Reset timer when rotation changes
+    setTimeRemaining(rotation.remainingSecs || 0)
+   
+    const timer = setInterval(() => {
+      setTimeRemaining((prev) => {
+        if (prev <= 0) {
+          handleTimerEnd()
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+
+    // Cleanup interval on unmount or rotation change
+    return () => clearInterval(timer)
+  }, [rotation.remainingSecs, handleTimerEnd])
+
+  const formatTime = (seconds: number): FormattedTime => {
+    const hours = Math.floor(seconds / 3600)
+    const mins = Math.floor((seconds % 3600) / 60)
+    const secs = seconds % 60
+   
+    if (hours > 0) {
+      return {
+        hours: hours.toString().padStart(2, '0'),
+        minutes: mins.toString().padStart(2, '0'),
+        seconds: secs.toString().padStart(2, '0')
+      }
+    }
+   
+    return {
+      minutes: mins.toString().padStart(2, '0'),
+      seconds: secs.toString().padStart(2, '0')
+    }
+  }
+
+  const time = formatTime(timeRemaining)
+
+  return (
+    <div className={`font-mono text-3xl font-bold tracking-wider ${colorClass}`}>
+      {time.hours && (
+        <>
+          <AnimatedDigit digit={time.hours[0]} />
+          <AnimatedDigit digit={time.hours[1]} />
+          <span className="opacity-50">:</span>
+        </>
+      )}
+      <AnimatedDigit digit={time.minutes[0]} />
+      <AnimatedDigit digit={time.minutes[1]} />
+      <span className="opacity-50">:</span>
+      <AnimatedDigit digit={time.seconds[0]} />
+      <AnimatedDigit digit={time.seconds[1]} />
+    </div>
+  )
+}
+
+export default MapTimer
+</file>
+
+<file path="components/MobileDisclaimer.tsx">
+import React from 'react';
+import { motion } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
+
+export interface MobileDisclaimerProps {
+  onProceed: () => void;
+}
+
+const MobileDisclaimer: React.FC<MobileDisclaimerProps> = ({ onProceed }) => {
+  return (
+    <div className="flex flex-col items-center justify-center h-screen bg-black">
+      <motion.div 
+        className="relative max-w-sm w-full px-6"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <motion.div 
+          className="bg-gradient-to-r from-black/40 to-black/20 border border-emerald-400/20 p-8 rounded-lg"
+          whileHover={{ scale: 1.02 }}
+        >
+          <h2 className="text-emerald-400 text-lg font-medium mb-3">Disclaimer</h2>
+          <p className="text-emerald-400/70 text-sm mb-6">
+            This app is made for desktop viewing. Mobile access is available but will not look good.
+          </p>
+          
+          <motion.button
+            onClick={onProceed}
+            className="group relative w-full overflow-hidden px-6 py-3 rounded-lg
+                     border border-emerald-400/20 bg-gradient-to-r from-black/40 to-black/20
+                     hover:border-emerald-400/40 transition-all duration-300"
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
+          >
+            <span className="flex items-center justify-center gap-2 text-emerald-400 font-medium">
+              Continue 
+              <ArrowRight className="w-4 h-4" />
+            </span>
+
+          </motion.button>
+        </motion.div>
+      </motion.div>
+    </div>
+  );
+};
+
+export default MobileDisclaimer;
+</file>
+
+<file path="components/RotationCard.tsx">
+"use client"
+
+import React from 'react'
+import { motion } from "framer-motion"
+import { Timer, ArrowRight } from 'lucide-react'
+import type { RotationCardProps } from './types'
+import MapTimer from './MapTimer'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
+
+type RotationMode = 'ranked' | 'normal' | 'ltm'
+
+interface ExtendedRotationCardProps extends RotationCardProps {
+  mode: RotationMode
+  onHoverStart?: () => void
+  onHoverEnd?: () => void
+}
+
+const RotationCard: React.FC<ExtendedRotationCardProps> = ({
+  current,
+  next,
+  type,
+  mode,
+  showEventName = false,
+  onHoverStart,
+  onHoverEnd
+}) => {
+  const isMobile = useMediaQuery('(max-width: 640px)')
+
+  const getModeColors = (mode: RotationMode) => {
+    switch (mode) {
+      case 'ranked':
+        return {
+          text: 'text-purple-400',
+          textMuted: 'text-purple-400/70',
+          border: 'border-purple-400/20',
+          badge: 'bg-purple-400/10',
+          progressBg: 'bg-purple-400/10',
+          progressFill: 'bg-purple-400',
+          accent: 'bg-purple-400',
+          position: 'right-0 rounded-l-full'
+        }
+      case 'normal':
+        return {
+          text: 'text-emerald-400',
+          textMuted: 'text-emerald-400/70',
+          border: 'border-emerald-400/20',
+          badge: 'bg-emerald-400/10',
+          progressBg: 'bg-emerald-400/10',
+          progressFill: 'bg-emerald-400',
+          accent: 'bg-emerald-400',
+          position: 'left-0 rounded-r-full'
+        }
+      case 'ltm':
+        return {
+          text: 'text-yellow-400',
+          textMuted: 'text-yellow-400/70',
+          border: 'border-yellow-400/20',
+          badge: 'bg-yellow-400/10',
+          progressBg: 'bg-yellow-400/10',
+          progressFill: 'bg-yellow-400',
+          accent: 'bg-yellow-400',
+          position: 'left-0 rounded-r-full'
+        }
+    }
+  }
+
+  const colors = getModeColors(mode)
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, flex: 1 }}
+      animate={{ opacity: 1 }}
+      whileHover={!isMobile ? {
+        flex: 1.5,
+        transition: {
+          duration: 0.4,
+          ease: [0.4, 0, 0.2, 1]
+        }
+      } : undefined}
+      onHoverStart={!isMobile ? onHoverStart : undefined}
+      onHoverEnd={!isMobile ? onHoverEnd : undefined}
+      className="group relative min-w-0 flex flex-col justify-between rounded-xl overflow-hidden
+                 h-[55vh] 
+                 p-4 sm:p-8 lg:p-16"
+    >
+      {/* Accent Bar */}
+      <div className={`absolute top-0 ${colors.position} w-1 sm:w-2 h-full flex`}>
+        <div className={`h-full w-full ${colors.accent} opacity-20 shadow-[0_0_15px] shadow-current`} />
+      </div>
+
+      <div className="space-y-4 sm:space-y-6 lg:space-y-8">
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <span className={`${colors.text} text-sm sm:text-base font-medium uppercase tracking-wider px-3 sm:px-5 py-1.5 sm:py-2.5 rounded-full ${colors.badge}`}>
+            {type}
+          </span>
+        </motion.div>
+
+        <motion.h1
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="text-3xl sm:text-5xl lg:text-7xl font-bold text-white tracking-tight"
+        >
+          {current.map}
+        </motion.h1>
+
+        {showEventName && current.eventName && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className={`inline-block ${colors.badge} px-3 sm:px-5 py-1.5 sm:py-2.5 rounded-lg`}
+          >
+            <span className={`${colors.text} text-base sm:text-xl`}>
+              {current.eventName}
+            </span>
+          </motion.div>
+        )}
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2 }}
+        className="flex items-center gap-3 sm:gap-6"
+      >
+        <Timer className={`h-6 w-6 sm:h-8 sm:w-8 lg:h-10 lg:w-10 ${colors.text}`} />
+        <span className="font-mono text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white">
+          <MapTimer
+            rotation={current}
+            colorClass={colors.text}
+          />
+        </span>
+      </motion.div>
+
+      <div className="space-y-4 sm:space-y-6">
+        <div className="flex items-center gap-3 sm:gap-5">
+          <div className="space-y-1 sm:space-y-2">
+            <span className={`block ${colors.textMuted} text-sm sm:text-base uppercase tracking-wider`}>
+              Next Map
+            </span>
+            <span className="block text-white/90 text-lg sm:text-xl lg:text-2xl font-medium">
+              {next.map}
+            </span>
+          </div>
+          <ArrowRight className={`h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 ${colors.text}`} />
+        </div>
+
+        <div className={`relative h-1 sm:h-1.5 ${colors.progressBg} rounded-full overflow-hidden`}>
+          <motion.div
+            className={`absolute top-0 left-0 h-full ${colors.progressFill}`}
+            initial={{ width: '100%' }}
+            animate={{ width: `${((current.remainingSecs || 0) / current.DurationInSecs) * 100}%` }}
+            transition={{ duration: 1, ease: "linear" }}
+          />
+        </div>
+      </div>
+    </motion.div>
+  )
+}
+
+export default RotationCard
+</file>
+
+<file path="components/types.ts">
+export interface MapRotation {
+    start: number
+    end: number
+    readableDate_start: string
+    readableDate_end: string
+    map: string
+    code: string
+    DurationInSecs: number
+    DurationInMinutes: number
+    asset: string
+    remainingSecs?: number
+    remainingMins?: number
+    remainingTimer?: string
+    eventName?: string
+    isActive?: boolean
+  }
+  
+  export interface RotationData {
+    battle_royale: {
+      current: MapRotation
+      next: MapRotation
+    }
+    ranked: {
+      current: MapRotation
+      next: MapRotation
+    }
+    ltm: {
+      current: MapRotation & { eventName: string }
+      next: MapRotation & { eventName: string }
+    }
+  }
+  
+export interface RotationCardProps {
+  current: MapRotation;
+  next: MapRotation;
+  type: string;
+  showEventName?: boolean;
+}
+</file>
+
+<file path="components/ui/button.tsx">
+import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
+import { cva, type VariantProps } from "class-variance-authority"
+
+import { cn } from "@/lib/utils"
+
+const buttonVariants = cva(
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  {
+    variants: {
+      variant: {
+        default:
+          "bg-primary text-primary-foreground shadow hover:bg-primary/90",
+        destructive:
+          "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
+        outline:
+          "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
+        secondary:
+          "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline",
+      },
+      size: {
+        default: "h-9 px-4 py-2",
+        sm: "h-8 rounded-md px-3 text-xs",
+        lg: "h-10 rounded-md px-8",
+        icon: "h-9 w-9",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  }
+)
+
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean
+}
+
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button"
+    return (
+      <Comp
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        {...props}
+      />
+    )
+  }
+)
+Button.displayName = "Button"
+
+export { Button, buttonVariants }
+</file>
+
+<file path="hooks/useMediaQuery.ts">
+import { useState, useEffect } from 'react'
+
+/**
+ * Hook that returns true if the current viewport matches the provided media query
+ * @param query - The media query to check against
+ * @returns boolean indicating if the media query matches
+ */
+export function useMediaQuery(query: string): boolean {
+  const [matches, setMatches] = useState(false)
+
+  useEffect(() => {
+    const media = window.matchMedia(query)
+    
+    // Initial check
+    setMatches(media.matches)
+
+    // Update matches when viewport changes
+    const listener = (event: MediaQueryListEvent) => {
+      setMatches(event.matches)
+    }
+
+    media.addEventListener('change', listener)
+    
+    return () => media.removeEventListener('change', listener)
+  }, [query])
+
+  return matches
+}
+</file>
+
+<file path="lib/utils.ts">
+import { clsx, type ClassValue } from "clsx"
+import { twMerge } from "tailwind-merge"
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
+</file>
+
+</files>
