@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react"
+import { useEffect, useState, useCallback, memo } from "react"
 import type { MapRotation } from './types'
 import AnimatedDigit from './AnimatedDigit'
 
@@ -13,7 +13,7 @@ interface FormattedTime {
   seconds: string;
 }
 
-const MapTimer = ({ rotation, colorClass = 'text-emerald-400/90' }: MapTimerProps) => {
+const MapTimer = memo(({ rotation, colorClass = 'text-emerald-400/90' }: MapTimerProps) => {
   const [timeRemaining, setTimeRemaining] = useState(rotation.remainingSecs || 0)
 
   const handleTimerEnd = useCallback(() => {
@@ -27,7 +27,7 @@ const MapTimer = ({ rotation, colorClass = 'text-emerald-400/90' }: MapTimerProp
    
     const timer = setInterval(() => {
       setTimeRemaining((prev) => {
-        if (prev <= 0) {
+        if (prev <= 1) {
           handleTimerEnd()
           return 0
         }
@@ -39,7 +39,7 @@ const MapTimer = ({ rotation, colorClass = 'text-emerald-400/90' }: MapTimerProp
     return () => clearInterval(timer)
   }, [rotation.remainingSecs, handleTimerEnd])
 
-  const formatTime = (seconds: number): FormattedTime => {
+  const formatTime = useCallback((seconds: number): FormattedTime => {
     const hours = Math.floor(seconds / 3600)
     const mins = Math.floor((seconds % 3600) / 60)
     const secs = seconds % 60
@@ -56,12 +56,12 @@ const MapTimer = ({ rotation, colorClass = 'text-emerald-400/90' }: MapTimerProp
       minutes: mins.toString().padStart(2, '0'),
       seconds: secs.toString().padStart(2, '0')
     }
-  }
+  }, [])
 
   const time = formatTime(timeRemaining)
 
   return (
-    <div className={`font-mono text-3xl font-bold tracking-wider ${colorClass}`}>
+    <div className={`font-mono text-xl sm:text-2xl md:text-3xl font-bold tracking-wider ${colorClass}`}>
       {time.hours && (
         <>
           <AnimatedDigit digit={time.hours[0]} />
@@ -76,6 +76,8 @@ const MapTimer = ({ rotation, colorClass = 'text-emerald-400/90' }: MapTimerProp
       <AnimatedDigit digit={time.seconds[1]} />
     </div>
   )
-}
+})
+
+MapTimer.displayName = "MapTimer"
 
 export default MapTimer
